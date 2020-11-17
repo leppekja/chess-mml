@@ -1,22 +1,41 @@
 import numpy as np
 
-c = np.array([[ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.],
-                [ 1., 10.,  1.,  1.,  1.,  1.,  1.,  1.],
-                [ 1.,  1.,  1.,  1., 10.,  1.,  1.,  1.],
-                [ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.],
-                [ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  9.],
-                [ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.],
-                [ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.],
-                [ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.]])
-
-# Create a 8x8 matrix where empty squares have the value of 1,
-# pawns 2, knight 4, bishop 4, rook 6, queen 9, king 10
+def vec_dot_product(pos1, pos2):
+    """
+    If boards are vectors, just take the dot product
+    """
+    return np.dot(pos1, pos2)
 
 def row_dot_product(pos1, pos2):
+    '''
+    Estimates dot product for 8x8 matrices and sums
+    '''
     score = 0
-    for a in pos1:
-        for b in pos2:
-            score += np.dot(a, b)
-
     for i, j in enumerate(a):
-        np.dot(j, b[i, :])
+        score += np.dot(j, b[i, :])
+    return score
+
+
+def fen_to_vector(fen, board=False):
+    vector = []
+    piece_notations = {'p': 1,
+                        'r':5,
+                        'b':3,
+                        'n':3,
+                        'k':10,
+                        'q':9}
+    for p in fen:
+        if p == " ":
+            break
+        elif p.isdigit():
+            vector.extend([0] * int(p))
+        else:
+            if p.isupper():
+                vector.append(piece_notations[p.lower()])
+            elif p.islower():
+                vector.append(piece_notations[p] * -1)
+    if board:
+        return np.array(vector).reshape((8,8))
+    else:
+        return np.array(vector)
+        
