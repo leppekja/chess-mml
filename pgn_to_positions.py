@@ -2,10 +2,11 @@ import chess
 import chess.pgn
 
 #read file
-def get_games(file):
+def get_games(file, num_games_to_get=None):
     """
     Parses a .pgn file and returns a 
-    list of positions (str). 
+    list of positions (str). If num_games_to_get
+    is None, returns all games.  
     """
     fens = []
     game_count = 0
@@ -24,6 +25,8 @@ def get_games(file):
                     board.push(move)
                     fens.append(board.fen())
                     num_moves.append(position_count)
+                if game_count == num_games_to_get:
+                    break
 
     print(game_count, "games counted.")
     print(len(fens), "positions obtained.")

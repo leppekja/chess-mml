@@ -3,7 +3,7 @@ Project for Math for Machine Learning
 
 [FEN Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
 
-
+1,000 games were obtained from the [lichess database](https://database.lichess.org/), January 2013. 
 
 ### Fen to Vector representation:
 Using: "rn1qkbnr/pppb1ppp/4p3/3p4/5P2/2N2N2/PPPPP1PP/R1BQKB1R w KQkq - 0 1" returns a (64, ) shape vector. Can enter board = True to return a 8x8 array. 
