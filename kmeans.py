@@ -8,7 +8,7 @@ def kmeans(data_csv, num_clusters):
     Initialize KMeans classifier
     """
     data = pd.read_csv(data_csv)
-    kmeans = KMeans.(n_clusters=num_clusters).fit(data)
+    kmeans = KMeans(n_clusters=num_clusters).fit(data)
     return kmeans
 
 def classify_pos(model, fen_string):
@@ -19,12 +19,16 @@ def classify_pos(model, fen_string):
     v = fv.fen_to_vector(fen_string)
     return model.predict(v.reshape(1,-1))
 
-def return_positions(model, data, group, num_to_return):
+def return_positions(model, data_csv, group, num_to_return):
     """
     Return a specified number of positions from a group.
     """
+    data = pd.read_csv(data_csv)
     group_indices = get_indices(group, model.labels_)
     return data.iloc[group_indices].sample(num_to_return)
+
+def positions_to_fens(positions):
+    return positions.apply(fv.vector_to_fen, axis = 1)
 
 def get_indices(clustNum, labels_array): 
     """
