@@ -17,3 +17,13 @@ Writes a file of PGNs to FEN notation using python-chess, and returns a text fil
 ### Stats
 
 Code for creating a few interesting plots based on piece position through positions.
+
+
+### KMeans
+
+Implements a KMeans clustering algorithm (Lloyd's, K++) using the sklearn library.
+
+
+### Vec Similarity
+
+Provides measures of how similar two (or more) positions are using the dot product of the vectors.

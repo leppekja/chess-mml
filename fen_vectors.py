@@ -1,21 +1,6 @@
 import numpy as np
 import pandas as pd
 
-def vec_dot_product(pos1, pos2):
-    """
-    If boards are vectors, just take the dot product
-    """
-    return np.dot(pos1, pos2)
-
-def row_dot_product(pos1, pos2):
-    '''
-    Estimates dot product for 8x8 matrices and sums
-    '''
-    score = 0
-    for i, j in enumerate(a):
-        score += np.dot(j, b[i, :])
-    return score
-
 def get_position_params(fen, full_fen=True):
     """
     Encodes the last section of the FEN: active color (ac),
