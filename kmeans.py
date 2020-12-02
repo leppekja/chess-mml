@@ -4,22 +4,55 @@ import fen_vectors as fv
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cdist
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import normalize
 
-def kmeans(data_csv, num_clusters):
+
+def pca(data_csv, n_components):
+    """
+    Perform PCA on the data and return the
+    transformed data in a tuple (model, data)
+    """
+    data = pd.read_csv(data_csv)
+    pca = PCA(n_components = n_components)
+    pca.fit(data)
+    print(pca.explained_variance_ratio_)
+    print(pca.singular_values_)
+    return (pca, pca.transform(data))
+
+
+def kmeans(data, csv=True, n_clusters=3, n_init=10, max_iter=300, normalization=True):
     """
     Initialize KMeans classifier
     """
-    data = pd.read_csv(data_csv)
-    kmeans = KMeans(n_clusters=num_clusters).fit(data)
+    if csv:
+        data = pd.read_csv(data_csv)
+    
+    if normalization:
+        # using l2 norm to normalize each sample
+        # may pass in already normalized data; 
+        # if so, use False in function args
+        normalize(data, copy=False, return_norm=False)
+
+    kmeans = KMeans(n_clusters=n_clusters,
+                    n_init=n_init,
+                    max_iter=max_iter).fit(data)
     return kmeans
 
-def classify_pos(model, fen_string):
+def classify_pos(model, pca=None, fen_string=None):
     """
     Classify a single position to a group with
     a trained model. 
     """
-    v = fv.fen_to_vector(fen_string)
-    return model.predict(v.reshape(1,-1))
+    assert fen_string is not None, "Need a FEN"
+
+    # Need to reshape for a single sample, avoid Value Error
+    v = fv.fen_to_vector(fen_string).reshape(1, -1)
+
+    if pca:
+        v = pca.transform(v)
+
+    return model.predict(v)
 
 def return_positions(model, data_csv, group, num_to_return):
     """
@@ -39,14 +72,22 @@ def get_indices(clustNum, labels_array):
     """
     return np.where(labels_array == clustNum)[0]
 
-
-def plot_curve(k_options, data_csv):
+def plot_curve(data_csv, n_clusters_options=3, n_init=10, max_iter=300, normalization=True):
     """
     tries multiple options of k (list)
     https://stackoverflow.com/questions/41540751/sklearn-kmeans-equivalent-of-elbow-method
     """
     data = pd.read_csv(data_csv)
-    clusters = [KMeans(n_clusters=i).fit(data) for i in k_options]
+    if normalization:
+        # Normalize data set only once, rather than over and over again
+        normalize(data, copy=False, return_norm=False)
+    # list comprehension to create a model for each k
+    clusters = [kmeans(data=data, 
+                        csv=False, 
+                        n_clusters=k,
+                        n_init=n_init,
+                        max_iter=max_iter,
+                        normalization= not normalization) for k in n_clusters_options]
     # three methods
     scores = [i.score(data) for i in clusters]
     inertias = [i.inertia_ for i in clusters]
@@ -54,11 +95,11 @@ def plot_curve(k_options, data_csv):
     #plot
     fig, axs = plt.subplots(3)
     fig.suptitle('curves')
-    axs[0].plot(k_options, scores)
+    axs[0].plot(n_clusters_options, scores)
     axs[0].set_title('sklean scores')
-    axs[1].plot(k_options, inertias)
+    axs[1].plot(n_clusters_options, inertias)
     axs[1].set_title('inertias?')
-    axs[2].plot(k_options, distances)
+    axs[2].plot(n_clusters_options, distances)
     axs[2].set_title('distances from each cluster center')
     plt.show()
-    return (k_options, scores, inertias, distances)
+    return (n_clusters_options, scores, inertias, distances)
