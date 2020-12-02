@@ -26,7 +26,7 @@ def kmeans(data, csv=True, n_clusters=3, n_init=10, max_iter=300, normalization=
     Initialize KMeans classifier
     """
     if csv:
-        data = pd.read_csv(data_csv)
+        data = pd.read_csv(data)
     
     if normalization:
         # using l2 norm to normalize each sample

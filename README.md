@@ -27,3 +27,7 @@ Implements a KMeans clustering algorithm (Lloyd's, K++) using the sklearn librar
 ### Vec Similarity
 
 Provides measures of how similar two (or more) positions are using the dot product of the vectors.
+
+### Run.py
+
+Using a list of vectorized positions (csv), and a given fen string, will return 50 positions from a cluster and cosine similarity scores.
