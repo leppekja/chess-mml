@@ -16,6 +16,45 @@ def row_dot_product(pos1, pos2):
         score += np.dot(j, b[i, :])
     return score
 
+def get_position_params(fen, full_fen=True):
+    """
+    Encodes the last section of the FEN: active color (ac),
+    castling availability (ca), en passant (ep), halfmove (hm), fullmove (fm).
+    If full_fen=True, the piece placement is included, otherwise,
+    assumes string "w KQkq - 0 1" only.
+    Returns vector
+    """
+    vector = []
+    if full_fen:
+        pn, ac, ca, ep, hm, fm = fen.split(" ")
+    else:
+        ac, ca, ep, hm, fm = fen.split(" ")
+
+    if ac == "w":
+        vector.append(1)
+    else:
+        vector.append(0)
+
+    castle = ['K','Q','k','q']
+    if ca == "-":
+        vector.extend([0] * 4)
+    else:
+        for j in castle:
+            if j in ca:
+                vector.append(1)
+            else:
+                vector.append(0)
+
+    if ep == "-":
+        vector.append(0)
+    else:
+        vector.append(1)
+
+    vector.append(int(hm))
+
+    vector.append(int(fm))
+
+    return vector
 
 def fen_to_vector(fen, board=False):
     vector = []

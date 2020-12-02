@@ -12,3 +12,8 @@ Note this function does not include which player to move, castling rights, en pa
 
 ### PGN to positions
 Writes a file of PGNs to FEN notation using python-chess, and returns a text file.
+
+
+### Stats
+
+Code for creating a few interesting plots based on piece position through positions.
