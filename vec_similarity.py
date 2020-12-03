@@ -1,5 +1,7 @@
-from numpy import dot
+from numpy import dot, mean
 from numpy.linalg import norm
+import kmeans as km
+import matplotlib.pyplot as plt
 
 def vec_dot_product(pos1, pos2):
     """
@@ -31,3 +33,41 @@ def cosine_similarity(pos1, pos2):
     affect the similarity score.
     """
     return dot(pos1, pos2) / (norm(pos1) * norm(pos2))
+
+
+def assess_clusters(data, n_clusters, verbose=False):
+    model = km.kmeans(data, n_clusters=n_clusters)
+    sim_scores = []
+    for i in range(n_clusters):
+        positions = km.return_positions(model, data, i, 50)
+        scores = []
+        for k in positions.itertuples():
+            for j in positions.index:
+                if k[0] != j:
+                    scores.append(
+                        cosine_similarity(list(k)[1:], positions.loc[j]))
+        sim_scores.append(mean(scores))
+        if verbose:
+            print("For cluster", i, ", average similarity is",mean(scores))
+    
+    return sim_scores
+
+
+def cartesian_product_basic(left, right):
+    #https://stackoverflow.com/questions/53699012/performant-cartesian-product-cross-join-with-pandas
+    return (
+       left.assign(key=1).merge(right.assign(key=1), on='key').drop('key', 1))
+
+
+def plot_intra_cluster_similarity(data, n_cluster_options):
+    scores = []
+    for i in n_cluster_options:
+        scores.append(mean(assess_clusters(data, n_clusters=i)))
+    plt.plot(n_cluster_options, scores)
+    plt.title("Cosine Similarities between positions in a cluster")
+    plt.xlabel("Cluster")
+    plt.ylabel("Cosine Similarity")
+    plt.show()
+
+    return None
+    
