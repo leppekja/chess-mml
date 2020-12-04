@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def get_position_params(fen, full_fen=True):
     """
     Encodes the last section of the FEN: active color (ac),
@@ -20,7 +21,7 @@ def get_position_params(fen, full_fen=True):
     else:
         vector.append(0)
 
-    castle = ['K','Q','k','q']
+    castle = ['K', 'Q', 'k', 'q']
     if ca == "-":
         vector.extend([0] * 4)
     else:
@@ -41,14 +42,15 @@ def get_position_params(fen, full_fen=True):
 
     return vector
 
+
 def fen_to_vector(fen, board=False):
     vector = []
     piece_notations = {'p': 1,
-                        'r':5,
-                        'b':4,
-                        'n':3,
-                        'k':10,
-                        'q':9}
+                       'r': 5,
+                       'b': 4,
+                       'n': 3,
+                       'k': 10,
+                       'q': 9}
     for p in fen:
         if p == " ":
             break
@@ -60,10 +62,11 @@ def fen_to_vector(fen, board=False):
             elif p.islower():
                 vector.append(piece_notations[p] * -1)
     if board:
-        return np.array(vector).reshape((8,8))
+        return np.array(vector).reshape((8, 8))
     else:
         return np.array(vector)
     return None
+
 
 def vector_to_fen(vector, board=False):
     """
@@ -71,12 +74,12 @@ def vector_to_fen(vector, board=False):
     Does not include who's move or castling / en passant rights
     """
     fen = ''
-    piece_notations = {1:'p',
-                        5:'r',
-                        4:'b',
-                        3:'n',
-                        10:'k',
-                        9:'q'}
+    piece_notations = {1: 'p',
+                       5: 'r',
+                       4: 'b',
+                       3: 'n',
+                       10: 'k',
+                       9: 'q'}
 
     for i, p in enumerate(vector):
         # get slashes for new row if all 8 squares obtained
@@ -95,7 +98,7 @@ def vector_to_fen(vector, board=False):
             if (len(fen) > 0):
                 if (fen[-1].isdigit()):
                     num = int(fen[-1])
-                    #increment the last character of the fen that was the previous 0
+                    # increment the last character of the fen that was the previous 0
                     fen = fen[:-1] + str(num + 1)
                 else:
                     fen += '1'
@@ -115,10 +118,10 @@ def file_fens_to_v(file, new_file_name="vec_positions.txt"):
             fens.append(fen_to_vector(l))
 
     data = pd.DataFrame(np.row_stack(fens))
-    data.to_csv("vec_positions.csv",index=False)
+    data.to_csv("vec_positions.csv", index=False)
 
-            
     return None
+
 
 def test_fv_to_vf(fen):
     '''
@@ -134,9 +137,10 @@ def test_fv_to_vf(fen):
         print(e)
         print(fen)
 
+
 def file_check(fenfile):
     """
-    checks across a whole file of fens 
+    checks across a whole file of fens
     """
     with open(fenfile) as f:
         for l in f.readlines():

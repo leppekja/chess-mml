@@ -1,12 +1,14 @@
 import chess
 import chess.pgn
 
-#read file
+# read file
+
+
 def get_games(file, num_games_to_get=None):
     """
-    Parses a .pgn file and returns a 
+    Parses a .pgn file and returns a
     list of positions (str). If num_games_to_get
-    is None, returns all games.  
+    is None, returns all games.
     """
     fens = []
     game_count = 0
@@ -31,7 +33,8 @@ def get_games(file, num_games_to_get=None):
     print(game_count, "games counted.")
     print(len(fens), "positions obtained.")
     print("average of", sum(num_moves) / len(num_moves), "positions per game.")
-    return fens    
+    return fens
+
 
 def write_positions_to_file(list_of_positions, filename=None):
     """
