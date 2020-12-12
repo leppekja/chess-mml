@@ -35,8 +35,8 @@ def pca_and_plot(ndims):
 
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
-    if ndims == 3:
-        plt.zlabel("Feature 3")
+    # if ndims == 3:
+    #     plt.zlabel("Feature 3")
 
     plt.title("PCA on Position Dataset")
     plt.show()
