@@ -37,11 +37,11 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-  Jacob Leppek
+  Jacob Leppek \\
   MSCAPP\\
   \texttt{leppekj@uchicago.edu} \\
 \And
-Ashu Tayal
+Ashu Tayal \\
 MPP\\
 \texttt{ashutayal@uchicago.edu} \\
 }
@@ -53,7 +53,7 @@ MPP\\
 \begin{abstract}
    Improvement in chess relies on pattern recognition; as such, the ability to search
   games by position is key to understanding different responses and strategies. Yet the
-  number of legal chess positions is estimated to be possibly 10\^{40}. As such, very few
+  number of legal chess positions is estimated to be possibly $10^{40}$. As such, very few
   of these positions have actually been played. To accommodate for this, we explore a number
   of approaches to approximating positions that are highly similar to the initial query. We
   encode positions as vectors; use k-means to group similar positions together to limit the
@@ -61,70 +61,90 @@ MPP\\
   scores from the searched cluster.
 \end{abstract}
 
-\section{Overview}
+\section{Introduction}
 
-NeurIPS requires electronic submissions.  The electronic submission site is
-\begin{center}
-  \url{https://cmt.research.microsoft.com/NeurIPS2019/}
-\end{center}
+    It is often beneficial for a chess player during a game to know whether previously archived chess games lead to positions approximately similar to the current position. It allows players to improve through repetition and understand how positional advantages emerge with seemingly inconsequential differences in piece position. It can, thus, be really helpful in deciding the next set of moves. Kotov, the Soviet chess grand master, opines that if one can recall similar positions from earlier games, then it is “easier to reach an assessment of how things stand, and to hit upon the correct plan oranalyze variations”. Many chess databases exist online that let users retrieve games based on position. This allows players to input a position and see what games that position emerged from as well as what moves were played before and after. But no free solution allows exists for letting users search for games with similar – but not exact – positions.
 
-Please read the instructions below carefully and follow them faithfully.
+ Our goal is to understand how linear algebra could provide a possible solution to returning similar positions from a given position, allowing users to generate new games with subtle differences that they can use to improve their positional understanding. Given the large possible set of chess positions, this also allows users to find the most similar board positions when no exact match is possible. We are curious about how linear algebra can be used to develop similarity scores for board positions and recommend new positions to players for study. We would like to understand how positions can be efficiently represented as matrices, if there are ways to simplify the representation of sparse positions (2-3 pieces among 64 squares), and how effective this approach is when dealing with large data sets.We used a subset of games obtained from lichess.org in PGN (text) format. This labeled data set consists of complete games with metadata on players, scores, times, and computer evaluations.
 
-\subsection{Style}
+ A 2014 paper from Dublin City University provides a discussion of approximate searching methods from an information retrieval perspective.\footnote{http://doras.dcu.ie/20378/1/ganguly-sigir2014.pdf} The authors briefly discuss encoding the chess board and pieces as feature vectors before dismissing it as inconvenient relative to textual representations for search purposes. They discuss what features should be used when developing a similarity score, and construct functions to calculate and combine these features for database retrieval purposes. We have not come across other academic papers that explicitly discuss this topic.
 
-Papers to be submitted to NeurIPS 2019 must be prepared according to the
-instructions presented here. Papers may only be up to eight pages long,
-including figures. Additional pages \emph{containing only acknowledgments and/or
-  cited references} are allowed. Papers that exceed eight pages of content
-(ignoring references) will not be reviewed, or in any other way considered for
-presentation at the conference.
+\section{Background and Methodology}
 
-The margins in 2019 are the same as since 2007, which allow for $\sim$$15\%$
-more words in the paper compared to earlier years.
+\subsection{Chess algebraic notation}
+\subsection{PGN Notation}
+\subsection{FEN notation}
+\subsection{K-means}
+\subsection{Cosine similarity scores}
+% PGN Notation
+% FEN notation
+% K-means
+% Cosine similarity scores
 
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
 
-\subsection{Retrieval of style files}
 
-The style files for NeurIPS and other conference information are available on
-the World Wide Web at
-\begin{center}
-  \url{http://www.neurips.cc/}
-\end{center}
-The file \verb+neurips_2019.pdf+ contains these instructions and illustrates the
-various formatting requirements your NeurIPS paper must satisfy.
+% NeurIPS requires electronic submissions.  The electronic submission site is
+% \begin{center}
+%   \url{https://cmt.research.microsoft.com/NeurIPS2019/}
+% \end{center}
 
-The only supported style file for NeurIPS 2019 is \verb+neurips_2019.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
-  Microsoft Word, and RTF are no longer supported!}
+% Please read the instructions below carefully and follow them faithfully.
 
-The \LaTeX{} style file contains three optional arguments: \verb+final+, which
-creates a camera-ready copy, \verb+preprint+, which creates a preprint for
-submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
-\verb+natbib+ package for you in case of package clash.
+% \subsection{Style}
 
-\paragraph{Preprint option}
-If you wish to post a preprint of your work online, e.g., on arXiv, using the
-NeurIPS style, please use the \verb+preprint+ option. This will create a
-nonanonymized version of your work with the text ``Preprint. Work in progress.''
-in the footer. This version may be distributed as you see fit. Please \textbf{do
-  not} use the \verb+final+ option, which should \textbf{only} be used for
-papers accepted to NeurIPS.
+% Papers to be submitted to NeurIPS 2019 must be prepared according to the
+% instructions presented here. Papers may only be up to eight pages long,
+% including figures. Additional pages \emph{containing only acknowledgments and/or
+%   cited references} are allowed. Papers that exceed eight pages of content
+% (ignoring references) will not be reviewed, or in any other way considered for
+% presentation at the conference.
 
-At submission time, please omit the \verb+final+ and \verb+preprint+
-options. This will anonymize your submission and add line numbers to aid
-review. Please do \emph{not} refer to these line numbers in your paper as they
-will be removed during generation of camera-ready copies.
+% The margins in 2019 are the same as since 2007, which allow for $\sim$$15\%$
+% more words in the paper compared to earlier years.
 
-The file \verb+neurips_2019.tex+ may be used as a ``shell'' for writing your
-paper. All you have to do is replace the author, title, abstract, and text of
-the paper with your own.
+% Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
+% NeurIPS website as indicated below. Please make sure you use the current files
+% and not previous versions. Tweaking the style files may be grounds for
+% rejection.
 
-The formatting instructions contained in these style files are summarized in
-Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
+% \subsection{Retrieval of style files}
+
+% The style files for NeurIPS and other conference information are available on
+% the World Wide Web at
+% \begin{center}
+%   \url{http://www.neurips.cc/}
+% \end{center}
+% The file \verb+neurips_2019.pdf+ contains these instructions and illustrates the
+% various formatting requirements your NeurIPS paper must satisfy.
+
+% The only supported style file for NeurIPS 2019 is \verb+neurips_2019.sty+,
+% rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{} 2.09,
+%   Microsoft Word, and RTF are no longer supported!}
+
+% The \LaTeX{} style file contains three optional arguments: \verb+final+, which
+% creates a camera-ready copy, \verb+preprint+, which creates a preprint for
+% submission to, e.g., arXiv, and \verb+nonatbib+, which will not load the
+% \verb+natbib+ package for you in case of package clash.
+
+% \paragraph{Preprint option}
+% If you wish to post a preprint of your work online, e.g., on arXiv, using the
+% NeurIPS style, please use the \verb+preprint+ option. This will create a
+% nonanonymized version of your work with the text ``Preprint. Work in progress.''
+% in the footer. This version may be distributed as you see fit. Please \textbf{do
+%   not} use the \verb+final+ option, which should \textbf{only} be used for
+% papers accepted to NeurIPS.
+
+% At submission time, please omit the \verb+final+ and \verb+preprint+
+% options. This will anonymize your submission and add line numbers to aid
+% review. Please do \emph{not} refer to these line numbers in your paper as they
+% will be removed during generation of camera-ready copies.
+
+% The file \verb+neurips_2019.tex+ may be used as a ``shell'' for writing your
+% paper. All you have to do is replace the author, title, abstract, and text of
+% the paper with your own.
+
+% The formatting instructions contained in these style files are summarized in
+% Sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
 
 \section{General formatting instructions}
 \label{gen_inst}
@@ -379,5 +399,9 @@ TELOS/Springer--Verlag.
 [3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of learning and
 recall at excitatory recurrent synapses and cholinergic modulation in rat
 hippocampal region CA3. {\it Journal of Neuroscience} {\bf 15}(7):5249-5262.
+
+
+
+
 
 \end{document}
